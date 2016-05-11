@@ -18,13 +18,15 @@ public class Chat extends javax.swing.JPanel {
 	private static final long serialVersionUID = 1L;
 	protected JFrame parent;
 	protected ChatClient client;
+	protected Messages messages;
 
 	/**
 	 * Creates new form Chat
 	 */
-	public Chat(JFrame parent, ChatClient client) {
+	public Chat(JFrame parent, Messages messages, ChatClient client) {
 		this.parent = parent;
 		this.client = client;
+		this.messages = messages;
 		initComponents();
 		parent.setContentPane(this);
 		parent.setVisible(true);
@@ -67,9 +69,9 @@ public class Chat extends javax.swing.JPanel {
 		txtConversation.setRows(5);
 		jScrollPane1.setViewportView(txtConversation);
 
-		txtSend.setText("Send");
+		txtSend.setText(messages.getString("Chat.0")); //$NON-NLS-1$
 
-		txtQuit.setText("Quit");
+		txtQuit.setText(messages.getString("Chat.1")); //$NON-NLS-1$
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
 		layout.setHorizontalGroup(

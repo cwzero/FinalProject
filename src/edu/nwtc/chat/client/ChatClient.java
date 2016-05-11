@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.management.RuntimeErrorException;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -93,7 +94,7 @@ public class ChatClient {
 
 			if (message instanceof LoginResponse) {
 				if (!message.equals(LoginResponse.success())) {
-					System.exit(0);
+					throw new RuntimeErrorException(new Error("Incorrect password"));
 				}
 			}
 

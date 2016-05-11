@@ -27,13 +27,15 @@ public class Login extends javax.swing.JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected JFrame parent;
+	protected Messages messages;
 
 	/**
 	 * Creates new form NewJPanel
 	 */
-	public Login(JFrame parent) {
+	public Login(JFrame parent, Messages messages) {
 		initComponents();
 		this.parent = parent;
+		this.messages = messages;
 		parent.setContentPane(this);
 		parent.setVisible(true);
 	}
@@ -69,15 +71,15 @@ public class Login extends javax.swing.JPanel {
 			}
 		});
 
-		jLabel1.setText("Screen Name");
+		jLabel1.setText(messages.getString("Login.0")); //$NON-NLS-1$
 
-		jLabel2.setText("Server Address");
+		jLabel2.setText(messages.getString("Login.1")); //$NON-NLS-1$
 
-		btnLogin.setText("Login");
+		btnLogin.setText(messages.getString("Login.2")); //$NON-NLS-1$
 		btnLogin.setPreferredSize(new java.awt.Dimension(75, 28));
 
-		btnCancel.setText("Cancel");
-		btnCancel.setName("btnCancel"); // NOI18N
+		btnCancel.setText(messages.getString("Login.3")); //$NON-NLS-1$
+		btnCancel.setName(messages.getString("Login.4")); // NOI18N //$NON-NLS-1$
 		btnCancel.setPreferredSize(new java.awt.Dimension(75, 28));
 		btnCancel.addActionListener(new java.awt.event.ActionListener() {
 			@Override
@@ -86,14 +88,14 @@ public class Login extends javax.swing.JPanel {
 			}
 		});
 
-		jLabel3.setFont(new java.awt.Font("Buxton Sketch", 0, 36)); // NOI18N
-		jLabel3.setText("Chat Buddy");
+		jLabel3.setFont(new java.awt.Font(messages.getString("Login.5"), 0, 36)); // NOI18N //$NON-NLS-1$
+		jLabel3.setText(messages.getString("Login.6")); //$NON-NLS-1$
 		
-		JLabel lblPassword = new JLabel("Password");
+		JLabel lblPassword = new JLabel(messages.getString("Login.7")); //$NON-NLS-1$
 		
 		passwordField = new JPasswordField();
 		
-		JLabel lblPortblankFor = new JLabel("Port (blank for default)");
+		JLabel lblPortblankFor = new JLabel(messages.getString("Login.8")); //$NON-NLS-1$
 		
 		txtPort = new JTextField();
 		txtPort.setColumns(10);
@@ -160,7 +162,7 @@ public class Login extends javax.swing.JPanel {
 		);
 		this.setLayout(layout);
 
-		getAccessibleContext().setAccessibleDescription("");
+		getAccessibleContext().setAccessibleDescription(messages.getString("Login.9")); //$NON-NLS-1$
 	}// </editor-fold>
 
 	private void txtScreenNameActionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,14 +179,14 @@ public class Login extends javax.swing.JPanel {
 		String address = txtAddress.getText();
 		String port = txtPort.getText();
 		ChatClient chatClient = null;
-		if (port != null && !"".equals(port)) {
+		if (port != null && !messages.getString("Login.10").equals(port)) { //$NON-NLS-1$
 			chatClient = new ChatClient(name, password, address, Integer.parseInt(port));
 		} else {
 			chatClient = new ChatClient(name, password, address);
 		}
 		chatClient.start();
 		
-		Chat chat = new Chat(parent, chatClient);
+		Chat chat = new Chat(parent, messages, chatClient);
 		parent.setContentPane(chat);
 		parent.setVisible(true);
 	}
