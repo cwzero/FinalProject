@@ -33,9 +33,9 @@ public class Login extends javax.swing.JPanel {
 	 * Creates new form NewJPanel
 	 */
 	public Login(JFrame parent, Messages messages) {
-		initComponents();
 		this.parent = parent;
 		this.messages = messages;
+		initComponents();
 		parent.setContentPane(this);
 		parent.setVisible(true);
 	}
@@ -72,10 +72,9 @@ public class Login extends javax.swing.JPanel {
 		});
 
 		jLabel1.setText(messages.getString("Login.0")); //$NON-NLS-1$
-
 		jLabel2.setText(messages.getString("Login.1")); //$NON-NLS-1$
-
 		btnLogin.setText(messages.getString("Login.2")); //$NON-NLS-1$
+		
 		btnLogin.setPreferredSize(new java.awt.Dimension(75, 28));
 
 		btnCancel.setText(messages.getString("Login.3")); //$NON-NLS-1$
