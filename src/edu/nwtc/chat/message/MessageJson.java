@@ -3,6 +3,7 @@ package edu.nwtc.chat.message;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StreamTokenizer;
+import java.io.Writer;
 
 import edu.nwtc.chat.User;
 
@@ -11,7 +12,6 @@ public class MessageJson {
 	protected String sender = null;
 	protected String time = null;
 	protected String message = "";
-	protected String recipient = null;
 	protected User user = null;
 	protected String status = "";
 
@@ -29,11 +29,6 @@ public class MessageJson {
 			this.message = chat.getMessage();
 		}
 
-		if (message instanceof PrivateMessage) {
-			PrivateMessage pm = (PrivateMessage) message;
-			this.recipient = pm.getRecipient();
-		}
-
 		if (message instanceof LoginMessage) {
 			LoginMessage lm = (LoginMessage) message;
 			this.user = lm.getUser();
@@ -45,7 +40,7 @@ public class MessageJson {
 		}
 	}
 
-	public String toJson() {
+	public MessageJson toJson(Writer writer) throws IOException {
 		String json = "{\n\t";
 
 		json += createJsonField("type", type);
@@ -62,10 +57,6 @@ public class MessageJson {
 			json += ",\n\t" + createJsonField("message", message);
 		}
 
-		if (recipient != null) {
-			json += ",\n\t" + createJsonField("recipient", recipient);
-		}
-
 		if (user != null) {
 			json += ",\n\t\"user\" : \n" + user.toJson();
 		}
@@ -74,8 +65,11 @@ public class MessageJson {
 			json += ",\n\t" + createJsonField("status", status);
 		}
 
-		json += "\n}";
-		return json;
+		json += "\n}\n";
+
+		writer.write(json);
+		writer.flush();
+		return this;
 	}
 
 	public MessageJson fromJson(Reader reader) throws IOException {
@@ -99,13 +93,12 @@ public class MessageJson {
 		while ((next = in.nextToken()) != StreamTokenizer.TT_EOF) {
 			if (next == StreamTokenizer.TT_WORD) {
 				System.out.println("WORD: " + in.sval);
-				break;
 			} else if (next == StreamTokenizer.TT_NUMBER) {
 				System.out.println("NUMBER: " + in.nval);
-				break;
 			} else {
 				switch ((char) next) {
 				case '"':
+				case '\'':
 					if (field == null) {
 						field = in.sval;
 					} else if (field.endsWith(".")) {
@@ -119,40 +112,40 @@ public class MessageJson {
 							time = in.sval;
 						} else if (field.equals("message")) {
 							message = in.sval;
-						} else if (field.equals("recipient")) {
-							recipient = in.sval;
 						} else if (field.equals("status")) {
 							status = in.sval;
 						} else if (field.equals("user.username")) {
 							user.setUsername(in.sval);
 						} else if (field.equals("user.password")) {
-							user.setUsername(in.sval);
+							user.setPassword(in.sval);
 						}
 
 						if (field.contains(".")) {
-							field = field.substring(0, field.lastIndexOf('.'));
+							field = field.substring(0, field.lastIndexOf('.') + 1);
 						} else {
 							field = null;
 						}
 					}
 					break;
-				case '\'':
+				case '{':
+					if (level > 0) {
+						field += ".";
+					}
+					if ("user.".equals(field)) {
+						user = new User();
+					}
+					level++;
+					break;
+				case '}':
+					if (level > 1) {
+						level--;
+						field = null;
+					} else {
+						return this;
+					}
 					break;
 				default:
-					if (in.sval == "{") {
-						level++;
-						field += ".";
-						if (field.equals("user.")) {
-							user = new User();
-						}
-					} else if (in.sval == "}") {
-						if (level > 0) {
-							level--;
-							field = null;
-						} else {
-							return this;
-						}
-					}
+					break;
 				}
 			}
 		}
@@ -172,8 +165,6 @@ public class MessageJson {
 			} else {
 				message = LoginResponse.failure();
 			}
-		} else if (type.equals("PRIVATE")) {
-			message = new PrivateMessage(sender, time, this.message, recipient);
 		}
 
 		return message;

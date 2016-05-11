@@ -4,18 +4,23 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerConnector implements Runnable {
+import edu.nwtc.chat.ChatThread;
+
+public class ServerConnector extends ChatThread {
 	protected ChatServer server;
 	protected int port = 9138;
+	protected ChatChannel channel;
 
-	public ServerConnector() {
-
+	public ServerConnector(ChatChannel channel) {
+		this(9138, channel);
 	}
 
-	public ServerConnector(int port) {
+	public ServerConnector(int port, ChatChannel channel) {
 		this.port = port;
+		this.channel = channel;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void run() {
 		ServerSocket serverSocket = null;
@@ -36,8 +41,8 @@ public class ServerConnector implements Runnable {
 			}
 
 			try {
-				ChatClient client = new ChatClient(clientSocket.getInputStream(), clientSocket.getOutputStream());
-				new Thread(client).start();
+				ChatClient client = new ChatClient(clientSocket.getInputStream(), clientSocket.getOutputStream(), channel);
+				client.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

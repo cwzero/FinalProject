@@ -1,16 +1,24 @@
 package edu.nwtc.chat;
 
+import java.util.Arrays;
+
 public class User {
+	protected int id = -1;
 	protected String username;
-	protected String password;
+	protected char[] password;
 
 	public User() {
 
 	}
 
-	public User(String username, String password) {
+	public User(String username, char[] password) {
 		this.username = username;
 		this.password = password;
+	}
+	
+	public User(int id, String username, char[] password) {
+		this(username, password);
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -21,20 +29,31 @@ public class User {
 		this.username = username;
 	}
 
-	public String getPassword() {
+	public char[] getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(char[] password) {
 		this.password = password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password.toCharArray();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String toJson() {
-
 		String json = "\t{\n\t\t";
 
 		json += "\"username\" : \"" + username + "\",\n\t\t";
-		json += "\"password\" : \"" + password + "\"\n";
+		json += "\"password\" : \"" + new String(password) + "\"\n";
 
 		json += "\t}";
 		return json;
@@ -44,7 +63,7 @@ public class User {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + Arrays.hashCode(password);
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -58,10 +77,7 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
+		if (!Arrays.equals(password, other.password))
 			return false;
 		if (username == null) {
 			if (other.username != null)
