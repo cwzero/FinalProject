@@ -102,9 +102,9 @@ public class ChatClient extends ChatThread {
 		@Override
 		public void run() {
 			OutputStreamWriter writer = new OutputStreamWriter(output);
+			int messageIndex = -1;
 			while (true) {
 				MessageJson messageJson = null;
-				int messageIndex = -1;
 				if (messageQueue.size() > 0) {
 					messageJson = new MessageJson(messageQueue.pop());
 				} else {
