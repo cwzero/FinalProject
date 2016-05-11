@@ -15,6 +15,7 @@ import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  *
@@ -91,52 +92,71 @@ public class Login extends javax.swing.JPanel {
 		JLabel lblPassword = new JLabel("Password");
 		
 		passwordField = new JPasswordField();
+		
+		JLabel lblPortblankFor = new JLabel("Port (blank for default)");
+		
+		txtPort = new JTextField();
+		txtPort.setColumns(10);
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
 		layout.setHorizontalGroup(
 			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-					.addGap(42)
-					.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(layout.createParallelGroup(Alignment.LEADING)
+					.addContainerGap()
+					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+							.addComponent(jLabel1)
+							.addContainerGap(187, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+							.addComponent(lblPassword)
+							.addContainerGap(204, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
 							.addComponent(jLabel2)
-							.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(txtAddress)
-								.addGroup(layout.createSequentialGroup()
-									.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addComponent(jLabel1)
-								.addComponent(txtScreenName)
-								.addComponent(lblPassword)
-								.addComponent(passwordField)))
+							.addContainerGap(176, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+							.addComponent(lblPortblankFor)
+							.addContainerGap(140, Short.MAX_VALUE))
 						.addGroup(layout.createSequentialGroup()
 							.addComponent(jLabel3)
-							.addGap(10)))
-					.addContainerGap(209, Short.MAX_VALUE))
+							.addContainerGap(65, Short.MAX_VALUE))
+						.addGroup(layout.createSequentialGroup()
+							.addGroup(layout.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(txtPort, Alignment.LEADING)
+								.addComponent(txtAddress, Alignment.LEADING)
+								.addComponent(passwordField, Alignment.LEADING)
+								.addComponent(txtScreenName, Alignment.LEADING)
+								.addGroup(Alignment.LEADING, layout.createSequentialGroup()
+									.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addContainerGap())))
 		);
 		layout.setVerticalGroup(
 			layout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(layout.createSequentialGroup()
-					.addContainerGap(21, Short.MAX_VALUE)
+					.addContainerGap()
 					.addComponent(jLabel3)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(jLabel1)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(txtScreenName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(txtScreenName, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblPassword)
-					.addGap(2)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(jLabel2)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblPortblankFor)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(txtPort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(55))
+					.addContainerGap())
 		);
 		this.setLayout(layout);
 
@@ -155,8 +175,13 @@ public class Login extends javax.swing.JPanel {
 		String name = txtScreenName.getText();
 		char[] password = passwordField.getPassword();
 		String address = txtAddress.getText();
-		
-		ChatClient chatClient = new ChatClient(name, password, address);
+		String port = txtPort.getText();
+		ChatClient chatClient = null;
+		if (port != null && !"".equals(port)) {
+			chatClient = new ChatClient(name, password, address, Integer.parseInt(port));
+		} else {
+			chatClient = new ChatClient(name, password, address);
+		}
 		chatClient.start();
 		
 		Chat chat = new Chat(parent, chatClient);
@@ -173,4 +198,5 @@ public class Login extends javax.swing.JPanel {
 	private javax.swing.JTextField txtAddress;
 	private javax.swing.JTextField txtScreenName;
 	private JPasswordField passwordField;
+	private JTextField txtPort;
 }
