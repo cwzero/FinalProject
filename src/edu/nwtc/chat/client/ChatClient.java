@@ -113,9 +113,9 @@ public class ChatClient {
 		public void handleMessage(Message message) {
 			if (message instanceof ChatMessage) {
 				ChatMessage msg = (ChatMessage) message;
-				if (!msg.getSender().equals(username)) {
+				//if (!msg.getSender().equals(username)) {
 					messageArea.append(msg.getSender() + ": " + msg.getMessage() + "\n");
-				}
+				//}
 			}
 		}
 	}
